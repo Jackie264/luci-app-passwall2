@@ -64,6 +64,16 @@ local api = require "luci.passwall2.api"
 		return str;
 	}
 
+	function stripHtmlLikeTags(str) {
+		let prev;
+		let cur = str;
+		do {
+			prev = cur;
+			cur = cur.replace(/<[^>]*>/g, '');
+		} while (cur !== prev);
+		return cur;
+	}
+
 	function getBg(el) {
 		if (!el) return null;
 		const style = getComputedStyle(el);
@@ -96,7 +106,7 @@ local api = require "luci.passwall2.api"
 	function add_node() {
 		let nodes_link = document.getElementById("nodes_link").value;
 		const group = (document.querySelector('#addlink_group_custom input[type="hidden"]')?.value || "default");
-		nodes_link = nodes_link.replace(/\t/g, "").replace(/\r\n|\r/g, "\n").replace(/<[^>]*>/g, '').trim();
+		nodes_link = stripHtmlLikeTags(nodes_link.replace(/\t/g, "").replace(/\r\n|\r/g, "\n")).trim();
 		if (nodes_link != "") {
 			nodes_link = decodeIfBase64(nodes_link);
 			let s = nodes_link.split('://');
