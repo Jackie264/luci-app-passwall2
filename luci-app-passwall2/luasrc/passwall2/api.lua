@@ -1014,7 +1014,6 @@ local default_file_tree = {
 }
 
 function get_api_json(url)
-	local jsonc = require "luci.jsonc"
 	local return_code, content = curl_logic(url, nil, curl_args)
 	if return_code ~= 0 or content == "" then return {} end
 	return jsonc.parse(content) or {}
@@ -1438,6 +1437,7 @@ function return_map(map)
 end
 
 function luci_types(id, m, s, type_name, option_prefix)
+	local cbi = require "luci.cbi"
 	local fv_type
 	local field_type = s.fields["type"]
 	if field_type then
